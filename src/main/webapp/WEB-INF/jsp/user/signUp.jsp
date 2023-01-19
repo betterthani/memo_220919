@@ -113,8 +113,8 @@
 
 			// validation
 			let loginId = $('input[name=loginId]').val().trim();
-			let password = $('#password').val().trim();
-			let recheckPassword = $('#recheckPassword').val().trim();
+			let password = $('#password').val();
+			let confirmPassword = $('#confirmPassword').val();
 			let name = $('#name').val().trim();
 			let email = $('#email').val().trim();
 
@@ -123,12 +123,12 @@
 				return false; //submit일 경우 return false; (서버에 안 가고 빠져나오게끔)
 			}
 
-			if (password == '' || recheckPassword == '') {
+			if (password == '' || confirmPassword == '') {
 				alert("비밀번호를 입력해주세요.");
 				return false;
 			}
 
-			if (password != recheckPassword) {
+			if (password != confirmPassword) {
 				alert("비밀번호가 일치하지 않습니다.");
 				return false;
 			}

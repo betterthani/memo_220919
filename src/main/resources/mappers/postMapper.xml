@@ -49,4 +49,23 @@
  			`userId` = #{userId}
  		ORDER BY `id` DESC
  	</select>
+ 	
+ 	<!-- 글 상세 가져오기 -->
+ 	<select id="selectPostByPostIdUserId" parameterType="map" resultType="com.memo.post.model.Post">
+ 		SELECT
+ 			`id`
+			,`userId`
+			,`subject`
+			,`content`
+			,`imagePath`
+			,`createdAt`
+			,`updatedAt`
+ 		FROM
+ 			`post`
+ 		WHERE
+ 			<!-- `컬럼` = dao가 넘겨준 이름 -->
+ 			`id` = #{postId}
+ 			AND `userId` = #{userId}
+ 			
+ 	</select>
  </mapper>

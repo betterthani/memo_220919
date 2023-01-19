@@ -22,7 +22,13 @@ public interface PostDAO {
 			@Param("content") String content,
 			@Param("imagePath") String imagePath);
 	
+	// 글 목록 가져오기
 	public List<Post> selectPostListByuserId(int userId);
-
+	
+	
+	// 글 상세 가져오기
+	public Post selectPostByPostIdUserId(
+			@Param("postId") int postId, 
+			@Param("userId") int userId);
 	
 }

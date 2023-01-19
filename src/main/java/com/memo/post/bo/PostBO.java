@@ -37,4 +37,9 @@ public class PostBO {
 		return postDAO.selectPostListByuserId(userId);
 	}
 	
+	// 글 상세 갖고오기
+	public Post getPostByPostIdUserId(int postId, int userId) {
+		return postDAO.selectPostByPostIdUserId(postId, userId);
+	}
+	
 }
