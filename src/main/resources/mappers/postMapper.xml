@@ -33,8 +33,8 @@
  		)
  	</insert>
  	
- 	<!-- 글 가져오기 -->
- 	<select id="selectPostListByuserId" parameterType="int" resultType="com.memo.post.model.Post">
+ 	<!-- 글 목록 가져오기 -->
+ 	<select id="selectPostListByUserId" parameterType="map" resultType="com.memo.post.model.Post">
  		SELECT
  			`id`
 			,`userId`
@@ -47,7 +47,28 @@
  			`post`
  		WHERE
  			`userId` = #{userId}
+ 			
+ 		<if test="direction == null">
+ 		<!-- 첫 페이지 들어왔을 떄(standardId로 조건 해도됨) -->
  		ORDER BY `id` DESC
+ 		</if>
+ 		
+ 		<if test="direction == 'next'">
+ 		<!-- 다음 방향 -->
+			<![CDATA[
+			AND `id` <  #{standardId}
+			]]>
+		ORDER BY `id` DESC
+ 		</if>
+ 		
+ 		<if test="direction == 'prev'">
+ 		<!-- 이전 방향(정방향) -->
+ 			<![CDATA[
+			AND `id` >  #{standardId}
+			]]>
+ 		</if>
+ 		
+ 		LIMIT ${limit}
  	</select>
  	
  	<!-- 글 상세 가져오기 -->
@@ -68,4 +89,42 @@
  			AND `userId` = #{userId}
  			
  	</select>
+ 	
+ 	<!-- 글 수정 -->
+ 	<update id="updatePostByPostIdUserId" parameterType="map">
+ 		UPDATE `post`
+ 		SET
+ 			`subject` = #{subject}
+			, `content` = #{content}
+			, `updatedAt` = NOW()
+			<!-- imagePath가 있을 때만 수정한다. -->
+			<if test="imagePath != null">
+			, `imagePath` = #{imagePath}
+			</if>
+ 		WHERE
+ 			`id` = #{postId}
+ 			AND `userId` = #{userId}
+ 	</update>
+ 	
+ 	<!-- 글 삭제 -->
+ 	<delete id="deletePostByPostIdUserId" parameterType="map">
+ 		DELETE FROM
+ 			`post`
+ 		WHERE
+ 			`id` = #{postId}
+ 			AND `userId` = #{userId}
+ 	</delete>
+ 	
+ 	<!-- 페이징 마지막 페이지 여부 -->
+ 	<select id="selectPostIdByUserIdSort" parameterType="map" resultType="int">
+ 		SELECT
+ 			`id`
+ 		FROM
+ 			`post`
+ 		WHERE
+ 			`userId` = #{userId}
+ 		ORDER BY `id` ${sort}
+ 		LIMIT 1
+ 	</select>
+ 	
  </mapper>

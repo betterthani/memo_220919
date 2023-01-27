@@ -6,11 +6,15 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 @Component	// bo, dao, contorller의 부모격 (일반적인 스프링 빈으로 성격이 딱히 없을때 사용)
 public class FileManagerService {
+	
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	// 실제 이미지가 저장될 경로 (서버)
 	public static final String FILE_UPLOAD_PATH = "C:\\eclipsehaeun\\6_spring_project\\memo\\workspace\\images/"; // 변경하지 못하도록 static final (상수, 상수는 보통 대문자)
@@ -44,6 +48,31 @@ public class FileManagerService {
 		return "/images/" + directoryName + file.getOriginalFilename();
 	}
 	
-	
+	public void deleteFile(String imagePath) { // imagePath: /images/aaaa_16205468768/sun.png
+		//         \images/   imagePath에 있는 겹치는 /images/ 구문 제거
+		Path path = Paths.get(FILE_UPLOAD_PATH + imagePath.replace("/images/", "")); // path= 이미지
+		if(Files.exists(path)) {
+			// 이미지 삭제 (bo는 삭제되든 안 되든 상관없으므로, 현재 페이지에서 에러 수긍)
+			try {
+				Files.delete(path);
+			} catch (IOException e) {
+				logger.error("[이미지 삭제] 이미지 삭제 실패. imagePath:{}" + imagePath); // 실패했지만 디렉토리 삭제하기 위해 return 값 따로 안 넣음
+			} 
+			
+			// 디렉토리(폴더) 삭제
+			path = path.getParent(); // 현재 이미지에 있던 폴더로 올라감 (부모 폴더로 한단계 올라감)
+			if(Files.exists(path)) {
+				try {
+					Files.delete(path);
+				} catch (IOException e) {
+					logger.error("[이미지 삭제] 디렉토리 삭제 실패. imagePath:{}" + imagePath);
+				}
+			}
+			
+		}
+		
+		
+		
+	}
 	
 }

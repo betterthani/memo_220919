@@ -22,13 +22,33 @@ public interface PostDAO {
 			@Param("content") String content,
 			@Param("imagePath") String imagePath);
 	
-	// 글 목록 가져오기
-	public List<Post> selectPostListByuserId(int userId);
+	// 글 수정
+	public void updatePostByPostIdUserId(
+			@Param("postId") int postId,
+			@Param("userId") int userId,
+			@Param("subject") String subject,
+			@Param("content") String content,
+			@Param("imagePath") String imagePath);
 	
+	// 글 목록 가져오기
+	public List<Post> selectPostListByUserId(
+			@Param("userId") int userId, 
+			@Param("direction") String direction,
+			@Param("standardId") Integer standardId,
+			@Param("limit") int limit);
+	
+	// 페이징 이전 마지막 페이지 여부
+	public int selectPostIdByUserIdSort(
+			@Param("userId") int userId,
+			@Param("sort") String sort);
 	
 	// 글 상세 가져오기
 	public Post selectPostByPostIdUserId(
 			@Param("postId") int postId, 
 			@Param("userId") int userId);
 	
+	// 글 삭제하기
+	public int deletePostByPostIdUserId(
+			@Param("postId") int postId, 
+			@Param("userId") int userId);
 }
